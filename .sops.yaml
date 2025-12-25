@@ -1,0 +1,8 @@
+---
+creation_rules:
+  - path_regex: ^k8s/.*/.*secret.*\.ya?ml$
+    encrypted_regex: '^(data|stringData)$'
+    age: age1vtnndcu4fmcthtam7zqlpt2nuqms7vhfdmljs08zzxkrnjy7344qt0td4v
+stores:
+  yaml:
+    indent: 2

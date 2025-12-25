@@ -1,0 +1,34 @@
+name: Auto PR for Flux Image Updates
+
+on:
+  create:
+
+jobs:
+  auto-pr:
+    runs-on: ubuntu-latest
+    if: |
+      github.event.ref_type == 'branch' &&
+      startsWith(github.event.ref, 'flux-')
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GH_PAT }}
+
+    - name: Create Pull Request
+      env:
+        GH_TOKEN: ${{ secrets.GH_PAT }}
+        GITHUB_REPO: ${{ github.repository }}
+        BRANCH_NAME: ${{ github.event.ref }}
+      run: |
+        gh pr create \
+          --repo "${GITHUB_REPO}" \
+          --head "${BRANCH_NAME}" \
+          --base "main" \
+          --title "Auto-PR from ${BRANCH_NAME}" \
+          --body ":robot: Automated PR from Flux Image Update branch" \
+          --draft
