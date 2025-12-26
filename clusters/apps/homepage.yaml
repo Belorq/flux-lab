@@ -1,0 +1,73 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: homepage
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: infra
+  interval: 10m
+  path: "./k8s/homepage"
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 2m
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: homepage
+  namespace: flux-system
+spec:
+  image: ghcr.io/gethomepage/homepage
+  interval: 5m
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: homepage
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: homepage
+  filterTags:
+    pattern: '^v?([0-9]+\.[0-9]+)\.[0-9]+$'
+  policy:
+    semver:
+      range: "*"
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageUpdateAutomation
+metadata:
+  name: homepage-update
+  namespace: flux-system
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: '{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}'
+    push:
+      branch: flux-homepage-update
+  update:
+    path: ./k8s/homepage
+    strategy: Setters
+

@@ -1,0 +1,131 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: monitoring
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: infra
+  interval: 10m
+  path: "./k8s/monitoring"
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 60m
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+
+###### KUBE-PROMETHEUS-STACK ######
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: kube-prometheus-stack
+  namespace: flux-system
+spec:
+  image: ghcr.io/prometheus-community/charts/kube-prometheus-stack
+  interval: 5m
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: kube-prometheus-stack
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: kube-prometheus-stack
+  filterTags:
+    pattern: '^([0-9]+\.[0-9]+\.[0-9]+)$'
+  policy:
+    semver:
+      range: ">=78.2.1"
+
+###### LOKI ######
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: loki
+  namespace: flux-system
+spec:
+  image: ghcr.io/grafana/helm-charts/loki
+  interval: 5m
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: loki
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: loki
+  filterTags:
+    pattern: '^([0-9]+\.[0-9]+\.[0-9]+)$'
+  policy:
+    semver:
+      range: ">=6.42.0"
+
+###### PROMTAIL ######
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: promtail
+  namespace: flux-system
+spec:
+  image: ghcr.io/grafana/helm-charts/promtail
+  interval: 5m
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: promtail
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: promtail
+  filterTags:
+    pattern: '^([0-9]+\.[0-9]+\.[0-9]+)$'
+  policy:
+    semver:
+      range: ">=6.17.0"
+
+###### MONITORING UPDATE AUTOMATION ######
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageUpdateAutomation
+metadata:
+  name: monitoring-update
+  namespace: flux-system
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: '{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}'
+    push:
+      branch: flux-monitoring-update
+  update:
+    path: ./k8s/monitoring
+    strategy: Setters
+
