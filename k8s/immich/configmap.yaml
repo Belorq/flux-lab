@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: immich-app-config
+  namespace: immich
+data:
+  DB_VECTOR_EXTENSION: vectorchord
+  DB_HOSTNAME: immich-postgres-rw
+  REDIS_HOSTNAME: immich-valkey
+  IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning:3003
+
+  IMMICH_TRASH_ENABLED: "true"
+  IMMICH_TRASH_DAYS: "30"
+  IMMICH_STORAGE_TEMPLATE_ENABLED: "true"
+  IMMICH_STORAGE_TEMPLATE: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
+
