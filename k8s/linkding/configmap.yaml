@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: linkding-configmap
+  namespace: linkding
+
+data:
+  LD_SUPERUSER_NAME: makar
+
+  LD_DB_ENGINE: postgres
+  LD_DB_DATABASE: linkding
+
+  LD_DB_USER: linkding
+
+  LD_DB_HOST: linkding-db-rw
+  LD_DB_PORT: "5432"
