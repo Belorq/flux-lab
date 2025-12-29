@@ -34,4 +34,4 @@ spec:
         superuser: false
         createrole: false
         passwordSecret:
-          name: linkding-db-creds
+          name: linkding-container-creds
