@@ -34,7 +34,7 @@ spec:
             - configMapRef:
                 name: linkding-configmap
             - secretRef:
-                name: linkding-container-creds
+                name: linkding-container-env
 
           ports:
             - containerPort: 9090

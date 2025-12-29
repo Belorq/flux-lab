@@ -24,7 +24,7 @@ spec:
       database: linkding
       owner: linkding
       secret:
-        name: linkding-container-creds
+        name: linkding-db-creds
 
   managed:
     roles:
@@ -34,4 +34,4 @@ spec:
         superuser: false
         createrole: false
         passwordSecret:
-          name: linkding-container-creds
+          name: linkding-db-creds
