@@ -107,7 +107,7 @@ spec:
               path: /api/server/ping
               port: http
               scheme: HTTP
-            imitialDelaySeconds: 90
+            initialDelaySeconds: 90
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 30
