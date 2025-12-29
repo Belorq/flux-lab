@@ -101,7 +101,6 @@ spec:
             - name: library-storage
               mountPath: /usr/src/app/upload
           startupProbe:
-            failureThreshold: 10
             httpGet:
               path: /api/server/ping
               port: http
