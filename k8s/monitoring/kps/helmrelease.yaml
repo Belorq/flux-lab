@@ -1,0 +1,100 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: kps
+  namespace: flux-system
+spec:
+  interval: 5m
+  url: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
+  ref:
+    tag: "80.0.0" # {"$imagepolicy": "flux-system:kube-prometheus-stack:tag"}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kps
+  namespace: monitoring
+spec:
+  interval: 30m
+  timeout: 30m
+  chartRef:
+    kind: OCIRepository
+    name: kps
+    namespace: flux-system
+  targetNamespace: monitoring
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    grafana:
+      admin:
+        existingSecret: "grafana-secrets"
+        userKey: admin-user
+        passwordKey: admin-password
+      envFromSecret: grafana-secrets
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          cert-manager.io/cluster-issuer: "local-ca"
+        hosts:
+          - grafana.local
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.local
+      sidecar:
+        datasources:
+          enabled: true
+          defaultDatasourceEnabled: true
+      additionalDataSources:
+        - name: Loki
+          type: loki
+          access: proxy
+          url: http://monitoring-loki.monitoring:3100
+          jsonData:
+            maxLines: 1000
+      resources:
+        requests:
+          cpu: 20m
+          memory: 256Mi
+        limits:
+          cpu: 200m
+          memory: 1Gi
+    prometheus:
+      prometheusSpec:
+        serviceMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelector: {}
+        serviceMonitorNamespaceSelector: {}
+        resources:
+          requests:
+            cpu: 60m
+            memory: 512Mi
+          limits:
+            cpu: 200m
+            memory: 1Gi
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          cert-manager.io/cluster-issuer: "local-ca"
+        hosts:
+          - prometheus.local
+        tls:
+          - secretName: prometheus-tls
+            hosts:
+              - prometheus.local
+    kubeControllerManager:
+      enabled: false
+    kubeScheduler:
+      enabled: false
+    kubeEtcd:
+      enabled: false
+    kubeProxy:
+      enabled: false
+

@@ -1,0 +1,75 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: loki
+  namespace: flux-system
+spec:
+  interval: 5m
+  url: oci://ghcr.io/grafana/helm-charts/loki
+  ref:
+    tag: "6.46.0" # {"$imagepolicy": "flux-system:loki:tag"}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: loki
+  namespace: monitoring
+spec:
+  interval: 30m
+  timeout: 30m
+  chartRef:
+    kind: OCIRepository
+    name: loki
+    namespace: flux-system
+  targetNamespace: monitoring
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    deploymentMode: SingleBinary
+    loki:
+      auth_enabled: false
+      useTestSchema: true
+      commonConfig:
+        path_prefix: /var/loki
+        replication_factor: 1
+      storage:
+        type: filesystem
+        filesystem:
+          chunks_directory: /var/loki/chunks
+          rules_directory: /var/loki/rules
+    singleBinary:
+      replicas: 1
+      persistence:
+        enabled: false
+      extraVolumes:
+        - name: loki-data
+          emptyDir: {}
+      extraVolumeMounts:
+        - name: loki-data
+          mountPath: /var/loki
+      resources:
+        requests:
+          cpu: 30m
+          memory: 256Mi
+        limits:
+          cpu: 250m
+          memory: 1Gi
+    write:
+      replicas: 0
+    read:
+      replicas: 0
+    backend:
+      replicas: 0
+    chunksCache:
+      enabled: false
+    resultsCache:
+      enabled: false
+    test:
+      enabled: false
+
