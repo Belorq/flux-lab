@@ -1,0 +1,31 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: wallabag-db
+  namespace: wallabag
+spec:
+  instances: 1
+  storage:
+    size: 2Gi
+    storageClass: local-path
+  bootstrap:
+    initdb:
+      database: wallabag
+      owner: wallabag
+      secret:
+        name: wallabag-db-creds
+
+  managed:
+    roles:
+      - name: wallabag
+        createdb: true
+        login: true
+        superuser: false
+        createrole: false
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        passwordSecret:
+          name: wallabag-db-creds
+

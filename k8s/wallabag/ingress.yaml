@@ -1,0 +1,30 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wallabag
+  namespace: wallabag
+  annotations:
+    cert-manager.io/cluster-issuer: "local-ca"
+    gethomepage.dev/description: Wallabag
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Cluster Management
+    gethomepage.dev/icon: wallabag.png
+    gethomepage.dev/name: Wallabag
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "wallabag.local"
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: wallabag
+                port:
+                  number: 80
+  tls:
+  - hosts:
+      - wallabag.local
+    secretName: wallabag-tls
