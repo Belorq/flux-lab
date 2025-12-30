@@ -27,5 +27,5 @@ spec:
           - pg_monitor
           - pg_signal_backend
         passwordSecret:
-          name: wallabag-db-creds
+          name: wallabag-container-env
 
