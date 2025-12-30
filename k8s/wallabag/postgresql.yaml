@@ -14,7 +14,7 @@ spec:
       database: wallabag
       owner: wallabag
       secret:
-        name: wallabag-db-creds
+        name: wallabag-container-env
 
   managed:
     roles:
