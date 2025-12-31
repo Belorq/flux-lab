@@ -28,8 +28,7 @@ metadata:
   namespace: flux-system
 spec:
   image: ghcr.io/sissbruecker/linkding
-  interval: 5m
-  timeout: 2m
+  interval: 12h
 
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
@@ -50,7 +49,7 @@ metadata:
   name: linkding-update
   namespace: flux-system
 spec:
-  interval: 30m
+  interval: 1h
   sourceRef:
     kind: GitRepository
     name: flux-system

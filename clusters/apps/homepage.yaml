@@ -14,7 +14,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  timeout: 2m
   decryption:
     provider: sops
     secretRef:
@@ -28,7 +27,7 @@ metadata:
   namespace: flux-system
 spec:
   image: ghcr.io/gethomepage/homepage
-  interval: 5m
+  interval: 12h
 
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
@@ -52,7 +51,7 @@ metadata:
   name: homepage-update
   namespace: flux-system
 spec:
-  interval: 30m
+  interval: 1h
   sourceRef:
     kind: GitRepository
     name: flux-system

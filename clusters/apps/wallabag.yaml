@@ -28,7 +28,7 @@ metadata:
   namespace: flux-system
 spec:
   image: docker.io/wallabag/wallabag
-  interval: 5m
+  interval: 12h
 
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
@@ -50,7 +50,7 @@ metadata:
   name: wallabag-update
   namespace: flux-system
 spec:
-  interval: 30m
+  interval: 1h
   sourceRef:
     kind: GitRepository
     name: flux-system

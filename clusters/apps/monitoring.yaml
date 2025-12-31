@@ -14,7 +14,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  timeout: 60m
   decryption:
     provider: sops
     secretRef:
@@ -30,7 +29,7 @@ metadata:
   namespace: flux-system
 spec:
   image: ghcr.io/prometheus-community/charts/kube-prometheus-stack
-  interval: 5m
+  interval: 12h
 
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
@@ -57,7 +56,7 @@ metadata:
   namespace: flux-system
 spec:
   image: ghcr.io/grafana/helm-charts/loki
-  interval: 5m
+  interval: 12h
 
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
@@ -84,7 +83,7 @@ metadata:
   namespace: flux-system
 spec:
   image: ghcr.io/grafana/helm-charts/promtail
-  interval: 5m
+  interval: 12h
 
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
@@ -110,7 +109,7 @@ metadata:
   name: monitoring-update
   namespace: flux-system
 spec:
-  interval: 30m
+  interval: 1h
   sourceRef:
     kind: GitRepository
     name: flux-system
