@@ -24,7 +24,6 @@ spec:
                 port:
                   number: 80
   tls:
-  - hosts:
-      - homepage.local
-    secretName: homepage-tls
-...
+    - hosts:
+        - homepage.local
+      secretName: homepage-tls
