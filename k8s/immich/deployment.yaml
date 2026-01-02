@@ -24,14 +24,6 @@ spec:
           ports:
             - containerPort: 6379
               name: valkey
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities: { drop: ["ALL"] }
-            runAsNonRoot: true
-            runAsUser: 1001
-            runAsGroup: 1001
-            fsGroup: 1001
-            readOnlyRootFilesystem: false
           startupProbe:
             exec:
               command:
