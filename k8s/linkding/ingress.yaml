@@ -27,4 +27,4 @@ spec:
   tls:
     - hosts:
         - linkding.local
-    secretName: linkding-tls
+      secretName: linkding-tls

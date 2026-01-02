@@ -27,4 +27,4 @@ spec:
   tls:
     - hosts:
         - wallabag.local
-    secretName: wallabag-tls
+      secretName: wallabag-tls
