@@ -1,3 +1,4 @@
+---
 name: YAML lint
 
 on:
@@ -29,17 +30,25 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Get changed YAML
+        id: changed-files
+        uses: bjw-s-labs/action-changed-files@1a5aeab1bfa64d0c4e786f501d5a3f1fad4a24da
+        with:
+          patterns: |
+            **/*.yml
+            **/*.yaml
+
       - name: Install yamllint
+        if: steps.changed-files.outputs.any_changed == "true"
         run: |
           pip install yamllint
 
       - name: Run yamllint
+        if: steps.changed-files.outputs.any_changed == "true"
         run: |
-          FILES=$(git diff --name-only origin/main...HEAD | grep -E '\.ya?ml$' || true)
-          if [ -n "$FILES" ]; then
-            yamllint -c ./.yamllint.yaml $FILES
-          else
-            echo "No YAML changes detected."
+          echo "${{ steps.changed-files.outputs.changed_files }}"
+          yamllint -c ./.yamllint.yaml \
+            ${{ steps.changed-files.outputs.changed_files }}
            
   kubeconform:
     name: kubeconform
@@ -47,6 +56,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Get changed manifests
+        id: changed-files
+        uses:  bjw-s-labs/action-changed-files@1a5aeab1bfa64d0c4e786f501d5a3f1fad4a24da
+        with:
+          patterns: |
+            clusters/**/*.yaml
+            k8s/**/*.yaml
+            infra/**/*.yaml
 
       - name: Install kubeconform
         run: |
@@ -56,10 +76,9 @@ jobs:
 
       - name: Validate Kubernetes manifests
         run: |
-          FILES=$(git diff --name-only origin/main...HEAD | grep -E '^(clusters|k8s|infra)/.*\.ya?ml$' || true)
-          if [ -n "$FILES" ]; then
-            xargs kubeconform -strict -summary --ignore-missing-schemas <<< "$FILES"
-          else
-            echo "No new Kubernetes manifests to validate."
-
-
+          echo "${{ steps.changed-files.outputs.changed_files }}"
+          kubeconform \
+            -strict \
+            -summary \
+            --ignore-missing-schemas \
+            ${{ steps.changed-files.outputs.changed_files }}
