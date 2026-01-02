@@ -1,0 +1,17 @@
+---
+#Area
+area/apps:
+  - changed-files:
+      - any-glob-to-any-file: "k8s/**/*"
+
+area/infra-apps:
+  - changed-files:
+      - any-glob-to-any-file: "infra/**/*"
+
+area/flux:
+  - changed-files:
+      - any-glob-to-any-file: "clusters/**/*"
+
+area/github:
+  - changed-files:
+      - any-glob-to-any-file: ".github/**/*"
