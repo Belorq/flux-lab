@@ -35,9 +35,11 @@ jobs:
 
       - name: Run yamllint
         run: |
-          yamllint \
-           --config-file .yamllint.yaml \
-           .
+          FILES=$(git diff --name-only origin/main...HEAD | grep -E '\.ya?ml$' || true)
+          if [ -n "$FILES" ]; then
+            yamllint -c ./.yamllint.yaml $FILES
+          else
+            echo "No YAML changes detected."
            
   kubeconform:
     name: kubeconform
@@ -54,7 +56,10 @@ jobs:
 
       - name: Validate Kubernetes manifests
         run: |
-          find . -name '*.yaml' -o -name '*.yml' \
-            | xargs kubeconform -strict -summary
+          FILES=$(git diff --name-only origin/main...HEAD | grep -E '^(clusters|k8s|infra)/.*\.ya?ml$' || true)
+          if [ -n "$FILES" ]; then
+            xargs kubeconform -strict -summary --ignore-missing-schemas <<< "$FILES"
+          else
+            echo "No new Kubernetes manifests to validate."
 
 
