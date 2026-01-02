@@ -68,4 +68,3 @@ spec:
   update:
     path: ./k8s/wallabag
     strategy: Setters
-

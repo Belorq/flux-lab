@@ -38,3 +38,23 @@ jobs:
           yamllint \
            --config-file .yamllint.yaml \
            .
+           
+  kubeconform:
+    name: kubeconform
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install kubeconform
+        run: |
+          curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz \
+            | tar -xz kubeconform
+          sudo mv kubeconform /usr/local/bin/
+
+      - name: Validate Kubernetes manifests
+        run: |
+          find . -name '*.yaml' -o -name '*.yml' \
+            | xargs kubeconform -strict -summary
+
+

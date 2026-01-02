@@ -13,8 +13,6 @@ resources:
   - service.yaml
   - ingress.yaml
 
-
 labels:
   - pairs:
       app.kubernetes.io/name: linkding
-

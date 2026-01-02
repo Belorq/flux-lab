@@ -14,4 +14,3 @@ data:
   IMMICH_TRASH_DAYS: "30"
   IMMICH_STORAGE_TEMPLATE_ENABLED: "true"
   IMMICH_STORAGE_TEMPLATE: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
-

@@ -22,9 +22,9 @@ metadata:
   namespace: immich
 spec:
   ports:
-  - name: http
-    port: 3003
-    protocol: TCP
+    - name: http
+      port: 3003
+      protocol: TCP
   selector:
     app: immich
     component: machine-learning
@@ -38,11 +38,10 @@ metadata:
   namespace: immich
 spec:
   ports:
-  - name: http
-    port: 6379
-    protocol: TCP
+    - name: http
+      port: 6379
+      protocol: TCP
   selector:
     app: immich
     component: valkey
   type: ClusterIP
-

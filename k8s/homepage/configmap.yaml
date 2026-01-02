@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -46,4 +47,3 @@ data:
         provider: duckduckgo
         target: _blank
   docker.yaml: ""
-

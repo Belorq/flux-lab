@@ -69,4 +69,3 @@ spec:
   update:
     path: ./k8s/homepage
     strategy: Setters
-

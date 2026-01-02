@@ -25,7 +25,6 @@ spec:
                 port:
                   number: 80
   tls:
-  - hosts:
-      - linkding.local
+    - hosts:
+        - linkding.local
     secretName: linkding-tls
-

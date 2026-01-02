@@ -8,4 +8,3 @@ resources:
   - cnpg-system.yaml
   - metrics-server.yaml
   - local-path-provisioner.yaml
-

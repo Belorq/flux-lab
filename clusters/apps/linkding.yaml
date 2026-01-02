@@ -67,4 +67,3 @@ spec:
   update:
     path: ./k8s/linkding
     strategy: Setters
-

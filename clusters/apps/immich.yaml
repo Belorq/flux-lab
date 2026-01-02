@@ -130,4 +130,3 @@ spec:
   update:
     path: ./k8s/immich
     strategy: Setters
-

@@ -28,4 +28,3 @@ spec:
           - pg_signal_backend
         passwordSecret:
           name: wallabag-db-creds
-

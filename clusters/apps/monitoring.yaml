@@ -127,4 +127,3 @@ spec:
   update:
     path: ./k8s/monitoring
     strategy: Setters
-
