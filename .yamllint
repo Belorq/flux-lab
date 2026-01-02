@@ -1,0 +1,23 @@
+---
+extends: default
+
+rules:
+  line-length: disable
+  brackets:
+    max-spaces-inside: 1
+    min-spaces-inside: 0
+  indentation:
+    spaces: consistent
+    indent-sequences: consistent
+    check-multi-line-strings: false
+  comments:
+    require-starting-space: true
+    min-spaces-from-content: 1
+  truthy:
+    allowed-values: ["true", "false", "on"]
+
+  comments:
+    min-spaces-from-content: 1
+
+ignore: |
+  .github/
