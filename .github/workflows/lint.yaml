@@ -35,6 +35,4 @@ jobs:
 
       - name: Run yamllint
         run: |
-          yamllint \
-            --config-file .yamllint.yaml \
-            .
+          yamllint .
