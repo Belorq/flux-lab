@@ -40,16 +40,16 @@ jobs:
             **/*.yaml
 
       - name: Install yamllint
-        if: steps.changed-files.outputs.any_changed != ''
+        if: ${{ steps.changed-files.outputs.changed_files }}
         run: |
           pip install yamllint
 
       - name: Run yamllint
-        if: steps.changed-files.outputs.any_changed != ''
+        if: ${{ steps.changed-files.outputs.changed_files }}
         run: |
           echo "${{ steps.changed-files.outputs.changed_files }}"
           yamllint -c ./.yamllint.yaml \
-            ${{ steps.changed-files.outputs.changed_files }}
+            ${{ join(fromJson(steps.changed-files.outputs.changed_files), ' ') }}
            
   kubeconform:
     name: kubeconform
@@ -70,18 +70,18 @@ jobs:
             infra/**/*.yaml
 
       - name: Install kubeconform
-        if: steps.changed-files.outputs.changed_files != ''
+        if: ${{ steps.changed-files.outputs.changed_files }}
         run: |
           curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz \
             | tar -xz kubeconform
           sudo mv kubeconform /usr/local/bin/
 
       - name: Validate Kubernetes manifests
-        if: steps.changed-files.outputs.changed_files != ''
+        if: ${{ steps.changed-files.outputs.changed_files }}
         run: |
           echo "${{ steps.changed-files.outputs.changed_files }}"
           kubeconform \
             -strict \
             -summary \
             --ignore-missing-schemas \
-            ${{ steps.changed-files.outputs.changed_files }}
+            ${{ join(fromJson(steps.changed-files.outputs.changed_files), ' ') }}
