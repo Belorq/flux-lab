@@ -26,10 +26,12 @@ jobs:
         GITHUB_REPO: ${{ github.repository }}
         BRANCH_NAME: ${{ github.event.ref }}
       run: |
+        COMMIT_TITLE="$(git log -1 --pretty=%s)"
+
         gh pr create \
           --repo "${GITHUB_REPO}" \
           --head "${BRANCH_NAME}" \
           --base "main" \
-          --title "Auto-PR from ${BRANCH_NAME}" \
+          --title "${COMMIT_TITLE}" \
           --body ":robot: Automated PR from Flux Image Update branch" \
           --draft
