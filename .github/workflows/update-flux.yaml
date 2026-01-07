@@ -31,7 +31,7 @@ jobs:
         id: update
         run: |
           flux install \
-            --components-extra=image-reflector-controller,image-automation-controller
+            --components-extra=image-reflector-controller,image-automation-controller \
             --export > ./clusters/flux-system/gotk-components.yaml
 
           VERSION="$(flux -v)"
