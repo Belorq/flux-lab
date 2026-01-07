@@ -47,10 +47,10 @@ spec:
           resources:
             requests:
               memory: 64Mi
-              cpu: 1m
+              cpu: 5m
             limits:
               memory: 256Mi
-              cpu: 5m
+              cpu: 15m
           volumeMounts:
             - mountPath: /app/config
               name: config-runtime
