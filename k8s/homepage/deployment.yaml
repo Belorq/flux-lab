@@ -44,13 +44,13 @@ spec:
             - name: http
               containerPort: 3000
               protocol: TCP
-          resources:
-            requests:
-              memory: 64Mi
-              cpu: 5m
-            limits:
-              memory: 256Mi
-              cpu: 15m
+#          resources:
+#            requests:
+#              memory: 64Mi
+#              cpu: 5m
+#            limits:
+#              memory: 256Mi
+#              cpu: 15m
           volumeMounts:
             - mountPath: /app/config
               name: config-runtime
