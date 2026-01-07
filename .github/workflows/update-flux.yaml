@@ -14,15 +14,17 @@ jobs:
   components:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-
       - name: Generate GitHub App token
         id: app-token
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.BOT_APP_ID }}
           private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Flux CLI
         uses: fluxcd/flux2/action@main
@@ -40,6 +42,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
+          token: ${{ steps.app-token.outputs.token }}
           branch: update-flux
           commit-message: "feat(ci): update flux to ${{ steps.update.outputs.flux_version }}"
           title: "feat(ci): update flux to ${{ steps.update.outputs.flux_version }}"
