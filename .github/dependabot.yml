@@ -12,4 +12,4 @@ updates:
     commit-message:
       prefix: "feat(ci):"
     labels:
-      - "github/ci"
+      - "area/github"
