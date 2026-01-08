@@ -14,22 +14,12 @@ data:
     - Developer:
         - Github:
             - abbr: GH
-              href: https://github.com/
+              href: https://github.com/Belorq/flux-lab
   services.yaml: |
     - My First Group:
         - My First Service:
             href: http://localhost/
             description: Homepage is awesome
-
-    - My Second Group:
-        - My Second Service:
-            href: http://localhost/
-            description: Homepage is the best
-
-    - My Third Group:
-        - My Third Service:
-            href: http://localhost/
-            description: Homepage is 😎
   widgets.yaml: |
     - kubernetes:
         cluster:
@@ -44,6 +34,7 @@ data:
           memory: true
           showLabel: true
     - search:
-        provider: duckduckgo
+        provider: custom
+        url: https://ya.ru/search/
         target: _blank
   docker.yaml: ""
