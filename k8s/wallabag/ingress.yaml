@@ -6,9 +6,7 @@ metadata:
   namespace: wallabag
   annotations:
     cert-manager.io/cluster-issuer: "local-ca"
-    gethomepage.dev/description: Wallabag
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/group: Cluster Management
+    gethomepage.dev/group: Selfhosted
     gethomepage.dev/icon: wallabag.png
     gethomepage.dev/name: Wallabag
 spec:
