@@ -7,14 +7,13 @@ metadata:
 data:
   kubernetes.yaml: |
     mode: cluster
-  settings.yaml: ""
+  settings.yaml: |
+    showStatus: true
+    statusStyle: "dot"
+    disableCollapse: true
   custom.css: ""
   custom.js: ""
-  bookmarks.yaml: |
-    - Developer:
-        - Github:
-            - abbr: GH
-              href: https://github.com/Belorq/flux-lab
+  bookmarks.yaml: ""
   services.yaml: |
     - My First Group:
         - My First Service:
