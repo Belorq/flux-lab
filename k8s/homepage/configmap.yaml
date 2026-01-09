@@ -33,10 +33,4 @@ data:
         format:
           timeStyle: short
           hourCycle: h23
-    - openmeteo:
-        latitude: 56.8389
-        longitude: 60.6057
-        timezone: Asia/Yekaterinburg
-        units: metric
-        cache: 5
   docker.yaml: ""
