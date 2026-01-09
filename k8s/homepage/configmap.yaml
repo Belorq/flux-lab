@@ -35,6 +35,6 @@ data:
           showLabel: true
     - search:
         provider: custom
-        url: https://ya.ru/search/
+        url: https://ya.ru/search/?text=
         target: _blank
   docker.yaml: ""
