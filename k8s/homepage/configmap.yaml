@@ -8,7 +8,7 @@ data:
   kubernetes.yaml: |
     mode: cluster
   settings.yaml: |
-    showStatus: true
+    showStatus: false
     statusStyle: "dot"
     disableCollapse: true
   custom.css: ""
@@ -32,8 +32,4 @@ data:
           cpu: true
           memory: true
           showLabel: true
-    - search:
-        provider: custom
-        url: https://ya.ru/search/?text=
-        target: _blank
   docker.yaml: ""

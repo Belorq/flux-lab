@@ -7,7 +7,6 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "local-ca"
     gethomepage.dev/group: Selfhosted
-    gethomepage.dev/href: "https://immich.local/"
     gethomepage.dev/enabled: "true"
     gethomepage.dev/icon: immich.png
     gethomepage.dev/name: immich
