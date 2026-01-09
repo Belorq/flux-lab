@@ -8,8 +8,9 @@ metadata:
     cert-manager.io/cluster-issuer: "local-ca"
     gethomepage.dev/group: Selfhosted
     gethomepage.dev/enabled: "true"
+    gethomepage.dev/pod-selector: ""
     gethomepage.dev/icon: immich.png
-    gethomepage.dev/name: immich
+    gethomepage.dev/name: Immich
 spec:
   ingressClassName: nginx
   rules:

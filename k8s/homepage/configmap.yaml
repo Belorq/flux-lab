@@ -8,17 +8,13 @@ data:
   kubernetes.yaml: |
     mode: cluster
   settings.yaml: |
-    showStatus: false
-    statusStyle: "dot"
+    showStats: false
+    statusStyle: "basic"
     disableCollapse: true
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: ""
-  services.yaml: |
-    - My First Group:
-        - My First Service:
-            href: http://localhost/
-            description: Homepage is awesome
+  services.yaml: ""
   widgets.yaml: |
     - kubernetes:
         cluster:
@@ -32,4 +28,15 @@ data:
           cpu: true
           memory: true
           showLabel: true
+    - datetime:
+        text_size: xl
+        format:
+          timeStyle: short
+          hourCycle: h23
+    - openmeteo:
+        latitude: 56.8389
+        longitude: 60.6057
+        timezone: Asia/Yekaterinburg
+        units: metric
+        cache: 5
   docker.yaml: ""

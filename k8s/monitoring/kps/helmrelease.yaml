@@ -45,6 +45,7 @@ spec:
           cert-manager.io/cluster-issuer: "local-ca"
           gethomepage.dev/group: Selfhosted
           gethomepage.dev/enabled: "true"
+          gethomepage.dev/pod-selector: ""
           gethomepage.dev/icon: grafana.png
           gethomepage.dev/name: Grafana
         hosts:
