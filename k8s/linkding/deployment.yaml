@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,37 +8,30 @@ spec:
   selector:
     matchLabels:
       app: linkding
-
   template:
     metadata:
       labels:
         app: linkding
         version: "1.44.1"
-
     spec:
       #      securityContext:
       #        runAsUser: 1000
       #        runAsGroup: 1000
       #        fsGroup: 1000
-
       containers:
         - name: linkding
-          image: sissbruecker/linkding:1.44.1 # {"$imagepolicy": "flux-system:linkding"}
+          image: ghcr.io/sissbruecker/linkding:1.45.0 # {"$imagepolicy": "flux-system:linkding"}
           imagePullPolicy: IfNotPresent
-
           securityContext:
             allowPrivilegeEscalation: false
-
           envFrom:
             - configMapRef:
                 name: linkding-configmap
             - secretRef:
                 name: linkding-container-env
-
           ports:
             - containerPort: 9090
               protocol: TCP
-
           resources:
             requests:
               memory: 128Mi
@@ -47,7 +39,6 @@ spec:
             limits:
               memory: 256Mi
               cpu: 256m
-
           readinessProbe:
             httpGet:
               path: /
@@ -56,7 +47,6 @@ spec:
             periodSeconds: 30
             timeoutSeconds: 3
             failureThreshold: 6
-
           livenessProbe:
             httpGet:
               path: /
