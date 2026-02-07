@@ -61,11 +61,12 @@ spec:
         branch: main
     commit:
       author:
-        email: fluxcdbot@users.noreply.github.com
-        name: fluxcdbot
+        email: 2581952+podruchnik-bot[bot]@users.noreply.github.com
+        name: podruchnik-bot[bot]
       messageTemplate: 'feat(container): update image {{ .AutomationObject }} {{range .Changed.Changes}}{{.OldValue}} -> {{.NewValue}} {{end}}'
     push:
       branch: flux-homepage-update
+      refspec: refs/heads/flux-homepage-update
   update:
     path: ./k8s/homepage
     strategy: Setters
