@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,35 +8,28 @@ spec:
   selector:
     matchLabels:
       app: wallabag
-
   template:
     metadata:
       labels:
         app: wallabag
-
     spec:
       # securityContext:
       # runAsUser: 1000
       # runAsGroup: 3000
       # fsGroup: 2000
-
       containers:
         - name: wallabag
-          image: wallabag/wallabag:2.6.14 # {"$imagepolicy": "flux-system:wallabag"}
-
+          image: docker.io/wallabag/wallabag:2.6.14 # {"$imagepolicy": "flux-system:wallabag"}
           securityContext:
             allowPrivilegeEscalation: false
-
           envFrom:
             - configMapRef:
                 name: wallabag-configmap
             - secretRef:
                 name: wallabag-container-env
-
           ports:
             - containerPort: 80
               protocol: TCP
-
           resources:
             requests:
               memory: 32Mi
@@ -45,7 +37,6 @@ spec:
             limits:
               memory: 512Mi
               cpu: 250m
-
           readinessProbe:
             httpGet:
               path: /
@@ -54,7 +45,6 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
-
           livenessProbe:
             httpGet:
               path: /
@@ -63,7 +53,6 @@ spec:
             periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 6
-
       volumes:
         - name: wallabag-data
           persistentVolumeClaim:
