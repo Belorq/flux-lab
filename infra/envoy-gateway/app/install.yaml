@@ -52634,8 +52634,6 @@ kind: Service
 metadata:
   name: envoy-gateway
   namespace: 'envoy-gateway-system'
-  annotations:
-    metallb.io/ip-allocated-from-poll: first-pool
   labels:
     control-plane: envoy-gateway
     helm.sh/chart: gateway-helm-v0.0.0-latest
@@ -52644,7 +52642,7 @@ metadata:
     app.kubernetes.io/version: "latest"
     app.kubernetes.io/managed-by: Helm
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     control-plane: envoy-gateway
     app.kubernetes.io/name: gateway-helm
