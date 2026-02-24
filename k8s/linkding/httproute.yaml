@@ -5,7 +5,6 @@ metadata:
   name: linkding
   namespace: linkding
   annotations:
-    cert-manager.io/cluster-issuer: "local-ca"
     gethomepage.dev/group: Selfhosted
     gethomepage.dev/enabled: "true"
     gethomepage.dev/pod-selector: ""
@@ -24,5 +23,5 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: linkding.local
+        - name: linkding
           port: 80
