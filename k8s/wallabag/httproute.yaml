@@ -4,6 +4,12 @@ kind: HTTPRoute
 metadata:
   name: wallabag
   namespace: wallabag
+  annotations:
+    gethomepage.dev/group: Selfhosted
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/pod-selector: ""
+    gethomepage.dev/icon: wallabag.png
+    gethomepage.dev/name: Wallabag
 spec:
   parentRefs:
     - name: eg
