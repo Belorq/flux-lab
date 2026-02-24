@@ -11,7 +11,7 @@ resources:
   - postgresql.yaml
   - deployment.yaml
   - service.yaml
-  - ingress.yaml
+  - httproute.yaml
 
 labels:
   - pairs:
