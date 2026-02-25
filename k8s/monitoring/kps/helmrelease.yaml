@@ -37,22 +37,6 @@ spec:
         userKey: admin-user
         passwordKey: admin-password
       envFromSecret: grafana-secrets
-      ingress:
-        enabled: true
-        ingressClassName: nginx
-        annotations:
-          cert-manager.io/cluster-issuer: "local-ca"
-          gethomepage.dev/group: Selfhosted
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/pod-selector: ""
-          gethomepage.dev/icon: grafana.png
-          gethomepage.dev/name: Grafana
-        hosts:
-          - grafana.local
-        tls:
-          - secretName: grafana-tls
-            hosts:
-              - grafana.local
       sidecar:
         datasources:
           enabled: true
@@ -83,17 +67,6 @@ spec:
           limits:
             cpu: 200m
             memory: 1Gi
-      ingress:
-        enabled: true
-        ingressClassName: nginx
-        annotations:
-          cert-manager.io/cluster-issuer: "local-ca"
-        hosts:
-          - prometheus.local
-        tls:
-          - secretName: prometheus-tls
-            hosts:
-              - prometheus.local
     kubeControllerManager:
       enabled: false
     kubeScheduler:
