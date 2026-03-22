@@ -130,10 +130,10 @@ spec:
             timeoutSeconds: 10
           resources:
             requests:
-              cpu: 10m
+              cpu: 100m
               memory: 256Mi
             limits:
-              cpu: 128m
+              cpu: 256m
               memory: 1Gi
       volumes:
         - name: library-storage
