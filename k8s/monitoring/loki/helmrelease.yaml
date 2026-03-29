@@ -49,7 +49,8 @@ spec:
         enabled: false
       extraVolumes:
         - name: loki-data
-          emptyDir: {}
+          emptyDir:
+            sizeLimit: 1Gi
       extraVolumeMounts:
         - name: loki-data
           mountPath: /var/loki
