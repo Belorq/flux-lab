@@ -84,6 +84,8 @@ spec:
           configMap:
             name: homepage
         - name: logs
-          emptyDir: {}
+          emptyDir:
+            sizeLimit: 1Gi
         - name: config-runtime
-          emptyDir: {}
+          emptyDir:
+            sizeLimit: 1Gi
