@@ -163,7 +163,7 @@ spec:
     spec:
       containers:
         - name: immich-ml
-          image: ghcr.io/immich-app/immich-machine-learning:v2.7.4 # {"$imagepolicy": "flux-system:immich-ml"}
+          image: ghcr.io/immich-app/immich-machine-learning:v2.7.5 # {"$imagepolicy": "flux-system:immich-ml"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3003
