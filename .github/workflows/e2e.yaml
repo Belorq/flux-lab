@@ -26,6 +26,10 @@ jobs:
 
       - name: Setup cluster reconcilation
         run: |
+          printf '%s' "SOPS_AGEKEY" | kubectl create secret generic sops-age \
+            --namespace=flux-system \
+            --from-file=sops.agekey=/dev/stdin
+
           flux create source git flux-system \
           --url=${{ github.event.repository.html_url }} \
           --commit=${{ github.event.pull_request.head.sha }} \
@@ -37,9 +41,6 @@ jobs:
           --prune=true \
           --wait=false
 
-          printf '%s' "SOPS_AGEKEY" | kubectl create secret generic sops-age \
-            --namespace=flux-system \
-            --from-file=sops.agekey=/dev/stdin
         env:
           SOPS_AGEKEY: ${{ secrets.SOPS_AGEKEY }}
 
