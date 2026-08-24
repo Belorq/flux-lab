@@ -24,7 +24,7 @@ jobs:
       - name: Install Flux in Kubernetes kind
         run: flux install --components-extra=image-reflector-controller,image-automation-controller
 
-      - name: Setup cluster reconcilation
+      - name: Setup cluster infra reconcilation
         run: |
           printf '%s' "$SOPS_AGEKEY" | kubectl create secret generic sops-age \
             --namespace=flux-system \
@@ -35,19 +35,66 @@ jobs:
           --commit=${{ github.event.pull_request.head.sha }} \
           --ignore-paths="clusters/flux-system/"
 
-          flux create kustomization flux-system \
+          flux create kustomization infra \
           --source=flux-system \
-          --path=./clusters \
+          --path=./clusters/infra \
           --prune=true \
           --wait=false
 
         env:
           SOPS_AGEKEY: ${{ secrets.SOPS_AGEKEY }}
 
+
       - name: Verify cluster reconciliation
         run: |
           kubectl -n flux-system wait kustomization/infra --for=condition=ready --timeout=10m
-          kubectl -n flux-system wait kustomization/apps --for=condition=ready --timeout=10m
+
+      - name: Detect changed app
+        id: app
+        run: |
+          changed_files=$(git diff --name-only \
+            "${{ github.event.pull_request.base.sha }}" \
+            "${{ github.event.pull_request.head.sha }}")
+
+            echo "Changed files:"
+            echo "$changed_files"
+
+            apps=$(echo "$changed_files" | \
+              awk -F/ '$1 == "k8s" && NF >= 2 {print $2}' | \
+              sort -u)
+
+            if [[ -z "$apps" ]]; then
+              echo "No application changes detected"
+              exit 1
+            fi
+
+            if [[ $(echo "$apps" | wc -l) -ne 1 ]]; then
+              echo "More than one application changed:"
+              echo "$apps"
+              exit 1
+            fi
+
+          app=$(echo "$apps")
+
+          echo "Application: $app"
+          echo "app=$app" >> "$GITHUB_OUTPUT"
+
+      - name: Reconcile changed app
+        run: |
+          flux create kustomization "$APP" \
+            --source=flux-system \
+            --path="./k8s/$APP" \
+            --prune=true \
+            --wait=false
+        env:
+          APP: ${{ steps.app.outputs.app }}
+
+      - name: Verify app reconcilation
+        run: |
+          kubectl -n flux-system wait \
+            kustomization/${{ steps.app.outputs.app }} \
+            --for=condition=ready \
+            --timeout=10m
 
       - name: Debug failure
         if: failure()
