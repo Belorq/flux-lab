@@ -33,7 +33,9 @@ jobs:
 
           flux create kustomization flux-system \
           --source=flux-system \
-          --path=./clusters
+          --path=./clusters \
+          --prune=true \
+          --wait=false
 
           printf '%s' "SOPS_AGEKEY" | kubectl create secret generic sops-age \
             --namespace=flux-system \
