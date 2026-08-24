@@ -26,7 +26,7 @@ jobs:
 
       - name: Setup cluster reconcilation
         run: |
-          printf '%s' "SOPS_AGEKEY" | kubectl create secret generic sops-age \
+          printf '%s' "$SOPS_AGEKEY" | kubectl create secret generic sops-age \
             --namespace=flux-system \
             --from-file=sops.agekey=/dev/stdin
 
