@@ -2,12 +2,6 @@
 name: YAML lint
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - "**/*.yml"
-      - "**/*.yaml"
-      - "!.github/**"
   pull_request:
     branches: [ main ]
     paths:
