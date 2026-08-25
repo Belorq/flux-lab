@@ -51,7 +51,7 @@ jobs:
           kubectl -n flux-system wait kustomization/infra --for=condition=ready --timeout=10m
 
       - name: Detect changed app
-        id: app
+        id: apps
         run: |
           changed_files=$(git diff --name-only \
             "${{ github.event.pull_request.base.sha }}" \
@@ -65,37 +65,38 @@ jobs:
               sort -u)
 
             if [[ -z "$apps" ]]; then
-              echo "No application changes detected"
-              exit 1
+              echo "No application changes detected, skipping app reconciliation"
+              echo "app=" >> "$GITHUB_OUTPUT"
+            else
+              echo "Applications: $apps"
+              apps_json=$(echo "$apps" | jq -R -s -c 'split("\n") | map(select(length > 0))')
+              echo "apps=$apps_json" >> "$GITHUB_OUTPUT"
             fi
-
-            if [[ $(echo "$apps" | wc -l) -ne 1 ]]; then
-              echo "More than one application changed:"
-              echo "$apps"
-              exit 1
-            fi
-
-          app=$(echo "$apps")
-
-          echo "Application: $app"
-          echo "app=$app" >> "$GITHUB_OUTPUT"
 
       - name: Reconcile changed app
+        if: steps.apps.outputs.apps != ''
         run: |
-          flux create kustomization "$APP" \
-            --source=flux-system \
-            --path="./k8s/$APP" \
-            --prune=true \
-            --wait=false
-        env:
-          APP: ${{ steps.app.outputs.app }}
+          echo '${{ steps.apps.outputs.apps }}' | jq -r '.[]' | while read -r app; do
+            echo "Creating Kustomization for $app" \
+            flux create kustomization "$APP" \
+              --source=flux-system \
+              --path="./k8s/$APP" \
+              --prune=true \
+              --wait=false \
+              --decryption-provider=sops \
+              --decryption-secret=sops-age
+          done
 
       - name: Verify app reconcilation
+        if: steps.apps.outputs.apps != ''
         run: |
-          kubectl -n flux-system wait \
-            kustomization/${{ steps.app.outputs.app }} \
-            --for=condition=ready \
-            --timeout=10m
+          echo '${{ steps.apps.outputs.apps }}' | jq -r '.[]' | while read -r app; do
+            echo "Waiting for $app"
+            kubectl -n flux-system wait \
+              kustomization/"$app" \
+              --for=condition=ready \
+              --timeout=10m
+          done
 
       - name: Debug failure
         if: failure()
