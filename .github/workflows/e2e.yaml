@@ -77,10 +77,10 @@ jobs:
         if: steps.apps.outputs.apps != ''
         run: |
           echo '${{ steps.apps.outputs.apps }}' | jq -r '.[]' | while read -r app; do
-            echo "Creating Kustomization for $app" \
-            flux create kustomization "$APP" \
+            echo "Creating Kustomization for $app"
+            flux create kustomization "$app \
               --source=flux-system \
-              --path="./k8s/$APP" \
+              --path="./k8s/$app" \
               --prune=true \
               --wait=false \
               --decryption-provider=sops \
