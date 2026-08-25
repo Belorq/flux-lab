@@ -19,7 +19,7 @@ spec:
       #        fsGroup: 1000
       containers:
         - name: linkding
-          image: ghcr.io/sissbruecker/linkding:1.46.1 # {"$imagepolicy": "flux-system:linkding"}
+          image: ghcr.io/sissbruecker/linkding:1.46.2 # {"$imagepolicy": "flux-system:linkding"}
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
