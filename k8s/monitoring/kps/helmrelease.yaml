@@ -41,7 +41,7 @@ spec:
         - name: sing-box-config
           configMap:
             name: sing-box-tun-config
-      extraContainers:
+      extraContainers: |
         - name: sing-box
           image: ghcr.io/sagernet/sing-box:latest
           securityContext:
