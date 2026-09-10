@@ -43,8 +43,8 @@ spec:
       envFromSecret: grafana-secrets
       extraVolumes:
         - name: sing-box-config
-          configMap:
-            name: sing-box-tun-config
+          secret:
+            secretName: sing-box-tun-config
       extraContainers: |
         - name: sing-box
           image: ghcr.io/sagernet/sing-box:latest
