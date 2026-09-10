@@ -32,11 +32,31 @@ spec:
       retries: 3
   values:
     grafana:
+      env:
+        HTTP_PROXY: "http://127.0.0.1:1080"
+        HTTPS_PROXY: "http://127.0.0.1:1080"
+        NO_PROXY: "localhost,127.0.0.1,monitoring-loki.monitoring,.monitoring.svc,.svc.cluster.local"
       admin:
         existingSecret: "grafana-secrets"
         userKey: admin-user
         passwordKey: admin-password
       envFromSecret: grafana-secrets
+      extraVolumes:
+        - name: sing-box-config
+          configMap:
+            name: sing-box-tun-config
+      extraContainers: |
+        - name: sing-box
+          image: ghcr.io/sagernet/sing-box:latest
+          args:
+            - run
+            - -c
+            - /etc/sing-box/config.json
+          volumeMounts:
+            - name: sing-box-config
+              mountPath: /etc/sing-box
+              readOnly: true
+
       sidecar:
         datasources:
           enabled: true
