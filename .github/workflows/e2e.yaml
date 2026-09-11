@@ -1,0 +1,109 @@
+name: e2e
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  kubernetes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Setup Flux
+        uses: fluxcd/flux2/action@main
+
+      - name: Setup Kubernetes
+        uses: helm/kind-action@v1.14.0
+        with:
+          cluster_name: e2e
+
+      - name: Install Flux in Kubernetes kind
+        run: flux install --components-extra=image-reflector-controller,image-automation-controller
+
+      - name: Setup cluster infra reconcilation
+        run: |
+          printf '%s' "$SOPS_AGEKEY" | kubectl create secret generic sops-age \
+            --namespace=flux-system \
+            --from-file=sops.agekey=/dev/stdin
+
+          flux create source git flux-system \
+          --url=${{ github.event.repository.html_url }} \
+          --commit=${{ github.event.pull_request.head.sha }} \
+          --ignore-paths="clusters/flux-system/"
+
+          flux create kustomization infra \
+          --source=flux-system \
+          --path=./clusters/infra \
+          --prune=true \
+          --wait=false
+
+        env:
+          SOPS_AGEKEY: ${{ secrets.SOPS_AGEKEY }}
+
+
+      - name: Verify cluster reconciliation
+        run: |
+          kubectl -n flux-system wait kustomization/infra --for=condition=ready --timeout=10m
+
+      - name: Detect changed app
+        id: apps
+        run: |
+          changed_files=$(git diff --name-only \
+            "${{ github.event.pull_request.base.sha }}" \
+            "${{ github.event.pull_request.head.sha }}")
+
+            echo "Changed files:"
+            echo "$changed_files"
+
+            apps=$(echo "$changed_files" | \
+              awk -F/ '$1 == "k8s" && NF >= 2 {print $2}' | \
+              sort -u)
+
+            if [[ -z "$apps" ]]; then
+              echo "No application changes detected, skipping app reconciliation"
+              echo "app=" >> "$GITHUB_OUTPUT"
+            else
+              echo "Applications: $apps"
+              apps_json=$(echo "$apps" | jq -R -s -c 'split("\n") | map(select(length > 0))')
+              echo "apps=$apps_json" >> "$GITHUB_OUTPUT"
+            fi
+
+      - name: Reconcile changed app
+        if: steps.apps.outputs.apps != ''
+        run: |
+          echo '${{ steps.apps.outputs.apps }}' | jq -r '.[]' | while read -r app; do
+            echo "Creating Kustomization for $app"
+            flux create kustomization "$app" \
+              --source=flux-system \
+              --path="./k8s/$app" \
+              --prune=true \
+              --wait=false \
+              --decryption-provider=sops \
+              --decryption-secret=sops-age
+          done
+
+      - name: Verify app reconcilation
+        if: steps.apps.outputs.apps != ''
+        run: |
+          echo '${{ steps.apps.outputs.apps }}' | jq -r '.[]' | while read -r app; do
+            echo "Waiting for $app"
+            kubectl -n flux-system wait \
+              kustomization/"$app" \
+              --for=condition=ready \
+              --timeout=10m
+          done
+
+      - name: Debug failure
+        if: failure()
+        run: |
+          kubectl -n flux-system get all
+          kubectl -n flux-system logs deploy/source-controller
+          kubectl -n flux-system logs deploy/kustomize-controller
+          kubectl -n flux-system logs deploy/helm-controller
+          flux get all --all-namespaces
+

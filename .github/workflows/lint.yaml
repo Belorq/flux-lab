@@ -2,12 +2,6 @@
 name: YAML lint
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - "**/*.yml"
-      - "**/*.yaml"
-      - "!.github/**"
   pull_request:
     branches: [ main ]
     paths:
@@ -27,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
@@ -56,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
