@@ -53,6 +53,10 @@ spec:
             - run
             - -c
             - /etc/sing-box/config.json
+          volumeMounts:
+            - name: sing-box-config
+              mountPath: /etc/sing-box
+              readOnly: true
 
       sidecar:
         datasources:
