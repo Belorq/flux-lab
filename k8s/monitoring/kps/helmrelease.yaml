@@ -41,10 +41,11 @@ spec:
         userKey: admin-user
         passwordKey: admin-password
       envFromSecret: grafana-secrets
-      extraVolumes:
+      extraSecretMounts:
         - name: sing-box-config
-          secret:
-            secretName: sing-box-tun-config
+          secretName: sing-box-tun-config
+          mountPath: /etc/sing-box
+          readOnly: true
       extraContainers: |
         - name: sing-box
           image: ghcr.io/sagernet/sing-box:latest
@@ -52,10 +53,6 @@ spec:
             - run
             - -c
             - /etc/sing-box/config.json
-          volumeMounts:
-            - name: sing-box-config
-              mountPath: /etc/sing-box
-              readOnly: true
 
       sidecar:
         datasources:
