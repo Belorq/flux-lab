@@ -36,6 +36,9 @@ spec:
         HTTP_PROXY: "http://127.0.0.1:1080"
         HTTPS_PROXY: "http://127.0.0.1:1080"
         NO_PROXY: "localhost,127.0.0.1,monitoring-loki.monitoring,monitoring-loki.monitoring.svc,monitoring-loki.monitoring.svc.cluster.local,monitoring-kps-kube-promet-prometheus.monitoring,monitoring-kps-kube-promet-prometheus.monitoring.svc,monitoring-kps-kube-promet-prometheus.monitoring.svc.cluster.local,monitoring-kps-kube-promet-alertmanager.monitoring,monitoring-kps-kube-promet-alertmanager.monitoring.svc,monitoring-kps-kube-promet-alertmanager.monitoring.svc.cluster.local"
+      grafana.ini:
+        plugins:
+          preinstall_auto_update: false
       admin:
         existingSecret: "grafana-secrets"
         userKey: admin-user
