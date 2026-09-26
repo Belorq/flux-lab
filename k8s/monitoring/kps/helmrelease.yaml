@@ -7,7 +7,7 @@ spec:
   interval: 5m
   url: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
   ref:
-    tag: "90.0.0" # {"$imagepolicy": "flux-system:kube-prometheus-stack:tag"}
+    tag: "91.7.0" # {"$imagepolicy": "flux-system:kube-prometheus-stack:tag"}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -60,7 +60,6 @@ spec:
             - name: sing-box-config
               mountPath: /etc/sing-box
               readOnly: true
-
       sidecar:
         datasources:
           enabled: true
