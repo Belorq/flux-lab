@@ -19,7 +19,7 @@ spec:
       # fsGroup: 2000
       containers:
         - name: wallabag
-          image: docker.io/wallabag/wallabag:2.6.14 # {"$imagepolicy": "flux-system:wallabag"}
+          image: docker.io/wallabag/wallabag:2.6.15 # {"$imagepolicy": "flux-system:wallabag"}
           securityContext:
             allowPrivilegeEscalation: false
           envFrom:
